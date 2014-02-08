@@ -30,13 +30,15 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         filename = os.path.basename(filepath)
 
         # Run `arc browse` and dump the output to the console
+        browse_path = '{0}${1}'.format(filename, lines)
+        popen_args = ['arc', 'browse', browse_path]
         child = subprocess.Popen(
-            ['arc', 'browse', '{0}${1}'.format(filename, lines)], cwd=filedir,
+            popen_args, cwd=filedir,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout = child.stdout.read()
         stderr = child.stderr.read()
         if stdout or stderr:
-            print('Ran `arc browse {0}`'.format(filename))
+            print('Ran `{0}` in `{1}`'.format(' '.join(popen_args), filedir))
             if stdout:
                 print('STDOUT: {0}'.format(stdout))
             if stderr:
