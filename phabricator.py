@@ -11,14 +11,11 @@ import subprocess
 
 
 class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
-    def run(self):
-        """Open a file inside of Phabricator with the selected lines."""
-        # Get the first selection
-        view = sublime.active_window().active_view()
-        first_sel = view.sel()[0]
-
-        # Find the lines that are selected
+    @classmethod
+    def get_first_lines(cls, view):
+        """Find the first set lines that are selected"""
         # Logic taken from https://github.com/ehamiter/ST2-GitHubinator/blob/c3fce41aaf2fc564115f83f1afef672f9a173d58/githubinator.py#L44-L49
+        first_sel = view.sel()[0]
         begin_line = view.rowcol(first_sel.begin())[0] + 1
         end_line = view.rowcol(first_sel.end())[0] + 1
         if begin_line == end_line:
@@ -26,12 +23,10 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         else:
             lines = '{0}-{1}'.format(begin_line, end_line)
 
-        # Find the file directory and name
-        filepath = view.file_name()
-        filedir = os.path.dirname(filepath)
-        filename = os.path.basename(filepath)
-
-        # Get current branch
+    @classmethod
+    def get_git_branch(self, directory):
+        """Get the active git branch"""
+        # Get the current branch name including `refs/heads` (e.g. `refs/heads/dev/my.branch`)
         git_args = ['git', 'symbolic-ref', 'HEAD']
         git_child = subprocess.Popen(
             git_args, cwd=filedir,
@@ -42,6 +37,23 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         if git_stderr:
             print('Ran `{0}` in `{1}`'.format(' '.join(git_args), filedir))
             print('STDERR: {0}'.format(git_stderr))
+
+        git_branch = git_stdout.replace('refs/heads/', '').replace('\r', '').replace('\n', '')
+        return git_branch
+
+
+    def run(self):
+        """Open a file inside of Phabricator with the selected lines."""
+        # Get the first selection
+        view = sublime.active_window().active_view()
+        lines = self.get_first_lines(view)
+
+        # Find the file directory and name
+        filepath = view.file_name()
+        filedir = os.path.dirname(filepath)
+        filename = os.path.basename(filepath)
+
+        # Get current branch
 
         # Format the current branch
         # `refs/heads/dev/my.branch` -> `dev/my.branch` -> `dev%2Fmy.branch` -> `dev%252Fmy.branch`
