@@ -1,1 +1,1 @@
-ln -s $PWD ~/.config/sublime-text-2/Packages/phabricator
+ln -s $PWD ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/phabricator
