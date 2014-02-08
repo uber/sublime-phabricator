@@ -1,10 +1,13 @@
 import os
-import urllib
+try:
+    # Attempt to load Python 2 quote
+    from urllib import quote
+except ImportError:
+    # Fallback to Python 3 quote
+    from urllib.parse import quote
 import sublime
 import sublime_plugin
 import subprocess
-
-quote = urllib.quote if hasattr(urllib, 'quote') else urllib.parse.quote
 
 
 class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
