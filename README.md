@@ -1,6 +1,12 @@
 # sublime-phabricator
 
-Open files in Phabricator via Sublime Text
+Open files in [Phabricator][] via [Sublime Text][]
+
+This was built to remove the inconvenience of switching to CLI and losing the context of line numbers. It is strongly inspired by [GitHubinator][]
+
+[Phabricator]: http://phabricator.org/
+[Sublime Text]: http://sublimetext.com/
+[GitHubinator]: https://github.com/ehamiter/ST2-GitHubinator
 
 ## Getting Started
 ### Installation
