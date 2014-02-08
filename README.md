@@ -2,11 +2,15 @@
 
 Open files in [Phabricator][] via [Sublime Text][]
 
-This was built to remove the inconvenience of switching to CLI and losing the context of line numbers. It is strongly inspired by [GitHubinator][]
+This was built to remove the inconvenience of switching to CLI and losing the context of line numbers. It is strongly inspired by [GitHubinator][].
 
 [Phabricator]: http://phabricator.org/
 [Sublime Text]: http://sublimetext.com/
 [GitHubinator]: https://github.com/ehamiter/ST2-GitHubinator
+
+![Open Phabricator via Sublime Text](docs/sublime_arcanist.png)
+
+![View selected content in Phabricator](docs/phab_arcanist.png)
 
 ## Getting Started
 ### Installation
@@ -24,9 +28,6 @@ import os; path=sublime.packages_path(); (os.makedirs(path) if not os.path.exist
 Packages can be uninstalled via "Package Control: Remove Package" via the command pallete, `ctrl+shift+p` on Windows/Linux, `command+shift+p` on Mac.
 
 ## Documentation
-_(Coming soon)_
-
-## Examples
 _(Coming soon)_
 
 ## Contributing
