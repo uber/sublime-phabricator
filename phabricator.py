@@ -1,4 +1,4 @@
-import path
+import os
 import sublime
 import sublime_plugin
 import subprocess
@@ -19,6 +19,11 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
 
         # Find the filename
         filepath = view.file_name()
-        dirname = path.os.dirname(filepath)
-        filename = path.os.basename(filepath)
-        # subprocess.Popen(['arc', 'browse',
+        filedir = os.path.dirname(filepath)
+        filename = os.path.basename(filepath)
+        print filedir, filename
+        child = subprocess.Popen(
+            ['arc', 'browse', filename], shell=True, cwd=filedir,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print child.stdout.read()
+        print child.stderr.read()
