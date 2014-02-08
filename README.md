@@ -28,12 +28,17 @@ import os; path=sublime.packages_path(); (os.makedirs(path) if not os.path.exist
 Packages can be uninstalled via "Package Control: Remove Package" via the command pallete, `ctrl+shift+p` on Windows/Linux, `command+shift+p` on Mac.
 
 ## Documentation
-_(Coming soon)_
+We provide a single command via the command pallete.
+
+### Phabricator: Open
+Open the current file inside of Phabricator. The first selected area will be highlighted in the open window.
+
+This command can be accessed as `phabricator_open` via `run_command`.
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
 
 ## License
-Copyright (c) 2014 Todd Wolfson
+Copyright (c) 2014 Uber
 
 Licensed under the MIT license.
