@@ -25,8 +25,9 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         filename = os.path.basename(filepath)
         print filedir, filename
         print filename
-        child = subprocess.Popen(
-            '/usr/local/bin/arc browse {0}'.format(filename), shell=True, cwd=filedir,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print child.stdout.read()
-        print child.stderr.read()
+        print os.environ['PATH']
+        # child = subprocess.Popen(
+        #     'ruby browse {0}'.format(filename), shell=True, cwd=filedir,
+        #     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # print child.stdout.read()
+        # print child.stderr.read()
