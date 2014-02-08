@@ -11,13 +11,18 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         view = sublime.active_window().active_view()
         first_sel = view.sel()[0]
 
-        # TODO: Find the lines that are selected
-        # begin_line = 2
-        lines = '$2'
+        # Find the lines that are selected
+        # Logic taken from https://github.com/ehamiter/ST2-GitHubinator/blob/c3fce41aaf2fc564115f83f1afef672f9a173d58/githubinator.py#L44-L49
+        begin_line = view.rowcol(first_sel.begin())[0] + 1
+        end_line = view.rowcol(first_sel.end())[0] + 1
+        if begin_line == end_line:
+            lines = begin_line
+        else:
+            lines = '{0}-{1}'.format(begin_line, end_line)
 
         # TODO: Don't forget about branches
 
-        print first_sel, lines
+        print lines
 
         # Find the file directory and name
         filepath = view.file_name()
@@ -26,7 +31,7 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
 
         # Run `arc browse` and dump the output to the console
         child = subprocess.Popen(
-            ['arc', 'browse', '{0}{1}'.format(filename, lines)], cwd=filedir,
+            ['arc', 'browse', '{0}${1}'.format(filename, lines)], cwd=filedir,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout = child.stdout.read()
         stderr = child.stderr.read()
