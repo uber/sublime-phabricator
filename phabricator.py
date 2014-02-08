@@ -1,4 +1,5 @@
 import os
+import urllib
 import sublime
 import sublime_plugin
 import subprocess
@@ -20,26 +21,38 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         else:
             lines = '{0}-{1}'.format(begin_line, end_line)
 
-        # TODO: Don't forget about branches
-
-        print lines
-
         # Find the file directory and name
         filepath = view.file_name()
         filedir = os.path.dirname(filepath)
         filename = os.path.basename(filepath)
 
+        # Get current branch
+        git_args = ['git', 'symbolic-ref', 'HEAD']
+        git_child = subprocess.Popen(
+            git_args, cwd=filedir,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        git_stdout = git_child.stdout.read()
+        git_stderr = git_child.stderr.read()
+        if git_stderr:
+            print('Ran `{0}` in `{1}`'.format(' '.join(git_args), filedir))
+            print('STDERR: {0}'.format(git_stderr))
+
+        # Format the current branch
+        # `refs/heads/dev/my.branch` -> `dev/my.branch` -> `dev%2Fmy.branch` -> `dev%252Fmy.branch`
+        git_branch = git_stdout.replace('refs/heads', '')
+        escaped_branch = urllib.quote(urllib.quote(git_branch))
+
         # Run `arc browse` and dump the output to the console
         browse_path = '{0}${1}'.format(filename, lines)
-        popen_args = ['arc', 'browse', browse_path]
-        child = subprocess.Popen(
-            popen_args, cwd=filedir,
+        arc_args = ['arc', 'browse', browse_path]
+        arc_child = subprocess.Popen(
+            arc_args, cwd=filedir,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout = child.stdout.read()
-        stderr = child.stderr.read()
-        if stdout or stderr:
-            print('Ran `{0}` in `{1}`'.format(' '.join(popen_args), filedir))
-            if stdout:
-                print('STDOUT: {0}'.format(stdout))
-            if stderr:
-                print('STDERR: {0}'.format(stderr))
+        arc_stdout = arc_child.stdout.read()
+        arc_stderr = arc_child.stderr.read()
+        if arc_stdout or arc_stderr:
+            print('Ran `{0}` in `{1}`'.format(' '.join(arc_args), filedir))
+            if arc_stdout:
+                print('STDOUT: {0}'.format(arc_stdout))
+            if arc_stderr:
+                print('STDERR: {0}'.format(arc_stderr))
