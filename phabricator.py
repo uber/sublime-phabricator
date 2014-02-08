@@ -36,8 +36,9 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         git_child = subprocess.Popen(
             git_args, cwd=filedir,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        git_stdout = str(git_child.stdout.read())
-        git_stderr = str(git_child.stderr.read())
+        # DEV: We decode for Python 3 which receives bytes
+        git_stdout = git_child.stdout.read().decode('utf-8')
+        git_stderr = git_child.stderr.read().decode('utf-8')
         if git_stderr:
             print('Ran `{0}` in `{1}`'.format(' '.join(git_args), filedir))
             print('STDERR: {0}'.format(git_stderr))
@@ -50,11 +51,12 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         # Run `arc browse` and dump the output to the console
         browse_path = '{0}${1}'.format(filename, lines)
         arc_args = ['arc', 'browse', browse_path, '--branch', escaped_branch]
+        print(arc_args)
         arc_child = subprocess.Popen(
             arc_args, cwd=filedir,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        arc_stdout = str(arc_child.stdout.read())
-        arc_stderr = str(arc_child.stderr.read())
+        arc_stdout = arc_child.stdout.read().decode('utf-8')
+        arc_stderr = arc_child.stderr.read().decode('utf-8')
         if arc_stdout or arc_stderr:
             print('Ran `{0}` in `{1}`'.format(' '.join(arc_args), filedir))
             if arc_stdout:
