@@ -4,6 +4,8 @@ import sublime
 import sublime_plugin
 import subprocess
 
+quote = urllib.quote if hasattr(urllib, 'quote') else urllib.parse.quote
+
 
 class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
     def run(self):
@@ -31,8 +33,8 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         git_child = subprocess.Popen(
             git_args, cwd=filedir,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        git_stdout = git_child.stdout.read()
-        git_stderr = git_child.stderr.read()
+        git_stdout = str(git_child.stdout.read())
+        git_stderr = str(git_child.stderr.read())
         if git_stderr:
             print('Ran `{0}` in `{1}`'.format(' '.join(git_args), filedir))
             print('STDERR: {0}'.format(git_stderr))
@@ -40,9 +42,7 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         # Format the current branch
         # `refs/heads/dev/my.branch` -> `dev/my.branch` -> `dev%2Fmy.branch` -> `dev%252Fmy.branch`
         git_branch = git_stdout.replace('refs/heads/', '').replace('\r', '').replace('\n', '')
-        escaped_branch = urllib.quote(urllib.quote(git_branch, ''), '')
-
-        print git_branch, escaped_branch
+        escaped_branch = quote(quote(git_branch, safe=''), safe='')
 
         # Run `arc browse` and dump the output to the console
         browse_path = '{0}${1}'.format(filename, lines)
@@ -50,8 +50,8 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         arc_child = subprocess.Popen(
             arc_args, cwd=filedir,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        arc_stdout = arc_child.stdout.read()
-        arc_stderr = arc_child.stderr.read()
+        arc_stdout = str(arc_child.stdout.read())
+        arc_stderr = str(arc_child.stderr.read())
         if arc_stdout or arc_stderr:
             print('Ran `{0}` in `{1}`'.format(' '.join(arc_args), filedir))
             if arc_stdout:
