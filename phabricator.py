@@ -51,7 +51,6 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         # Run `arc browse` and dump the output to the console
         browse_path = '{0}${1}'.format(filename, lines)
         arc_args = ['arc', 'browse', browse_path, '--branch', escaped_branch]
-        print(arc_args)
         arc_child = subprocess.Popen(
             arc_args, cwd=filedir,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
