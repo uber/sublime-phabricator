@@ -13,7 +13,7 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
 
         # TODO: Find the lines that are selected
         # begin_line = 2
-        lines = '2'
+        lines = '$2'
 
         # TODO: Don't forget about branches
 
@@ -26,7 +26,7 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
 
         # Run `arc browse` and dump the output to the console
         child = subprocess.Popen(
-            ['arc', 'browse', filename], cwd=filedir,
+            ['arc', 'browse', '{0}{1}'.format(filename, lines)], cwd=filedir,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout = child.stdout.read()
         stderr = child.stderr.read()
