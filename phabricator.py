@@ -39,20 +39,22 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
 
         # Format the current branch
         # `refs/heads/dev/my.branch` -> `dev/my.branch` -> `dev%2Fmy.branch` -> `dev%252Fmy.branch`
-        git_branch = git_stdout.replace('refs/heads', '')
-        escaped_branch = urllib.quote(urllib.quote(git_branch))
+        git_branch = git_stdout.replace('refs/heads/', '').replace('\r', '').replace('\n', '')
+        escaped_branch = urllib.quote(urllib.quote(git_branch, ''), '')
 
-        # Run `arc browse` and dump the output to the console
-        browse_path = '{0}${1}'.format(filename, lines)
-        arc_args = ['arc', 'browse', browse_path]
-        arc_child = subprocess.Popen(
-            arc_args, cwd=filedir,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        arc_stdout = arc_child.stdout.read()
-        arc_stderr = arc_child.stderr.read()
-        if arc_stdout or arc_stderr:
-            print('Ran `{0}` in `{1}`'.format(' '.join(arc_args), filedir))
-            if arc_stdout:
-                print('STDOUT: {0}'.format(arc_stdout))
-            if arc_stderr:
-                print('STDERR: {0}'.format(arc_stderr))
+        print git_branch, escaped_branch
+
+        # # Run `arc browse` and dump the output to the console
+        # browse_path = '{0}${1}'.format(filename, lines)
+        # arc_args = ['arc', 'browse', browse_path, '--branch', git_branch]
+        # arc_child = subprocess.Popen(
+        #     arc_args, cwd=filedir,
+        #     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # arc_stdout = arc_child.stdout.read()
+        # arc_stderr = arc_child.stderr.read()
+        # if arc_stdout or arc_stderr:
+        #     print('Ran `{0}` in `{1}`'.format(' '.join(arc_args), filedir))
+        #     if arc_stdout:
+        #         print('STDOUT: {0}'.format(arc_stdout))
+        #     if arc_stderr:
+        #         print('STDERR: {0}'.format(arc_stderr))
