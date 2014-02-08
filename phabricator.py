@@ -15,6 +15,8 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         # begin_line = 2
         lines = '2'
 
+        # TODO: Don't forget about branches
+
         print first_sel, lines
 
         # Find the filename
@@ -24,7 +26,7 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         print filedir, filename
         print filename
         child = subprocess.Popen(
-            'arc browse {0}'.format(filename), shell=True, cwd=filedir,
+            '/usr/local/bin/arc browse {0}'.format(filename), shell=True, cwd=filedir,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print child.stdout.read()
         print child.stderr.read()
