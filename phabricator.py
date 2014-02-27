@@ -9,10 +9,13 @@ import sublime
 import sublime_plugin
 import subprocess
 
+SETTINGS_FILE = "Phabricator.sublime-settings"
 
 class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
     def run(self):
         """Open a file inside of Phabricator with the selected lines."""
+        settings = sublime.load_settings(SETTINGS_FILE)
+
         # Get the first selection
         view = sublime.active_window().active_view()
         first_sel = view.sel()[0]
@@ -50,7 +53,8 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
 
         # Run `arc browse` and dump the output to the console
         browse_path = '{0}${1}'.format(filename, lines)
-        arc_args = ['arc', 'browse', browse_path, '--branch', escaped_branch]
+        print(settings.get('arc_path'))
+        arc_args = [settings.get('arc_path'), 'browse', browse_path, '--branch', escaped_branch]
         arc_child = subprocess.Popen(
             arc_args, cwd=filedir,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)

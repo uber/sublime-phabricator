@@ -1,0 +1,38 @@
+[
+  {
+    "caption": "Preferences",
+    "id": "preferences",
+    "mnemonic": "n",
+    "children":
+    [
+      {
+        "caption": "Package Settings",
+        "id": "package-settings",
+        "mnemonic": "P",
+        "children":
+        [
+          {
+            "caption": "Phabricator",
+            "children":
+            [
+              {
+                "caption": "Settings – Default",
+                "command": "open_file", "args":
+                {
+                  "file": "${packages}/Phabricator/Phabricator.sublime-settings"
+                }
+              },
+              {
+                "caption": "Settings – User",
+                "command": "open_file", "args":
+                {
+                  "file": "${packages}/User/Phabricator.sublime-settings"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

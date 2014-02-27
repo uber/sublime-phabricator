@@ -27,6 +27,9 @@ import os; path=sublime.packages_path(); (os.makedirs(path) if not os.path.exist
 
 Packages can be uninstalled via "Package Control: Remove Package" via the command pallete, `ctrl+shift+p` on Windows/Linux, `command+shift+p` on Mac.
 
+### Configuration
+Set your preferences by going to `Preferences | Package Settings | Phabricator | Settings - User`. Be sure to set `arc_path` to the absolute path to `arc` in your system
+
 ## Documentation
 We provide a single command via the command pallete.
 
@@ -34,6 +37,7 @@ We provide a single command via the command pallete.
 Open the current file inside of Phabricator. The first selected area will be highlighted in the open window.
 
 This command can be accessed as `phabricator_open` via `run_command`.
+
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
