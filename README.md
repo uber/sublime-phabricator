@@ -28,7 +28,14 @@ import os; path=sublime.packages_path(); (os.makedirs(path) if not os.path.exist
 Packages can be uninstalled via "Package Control: Remove Package" via the command pallete, `ctrl+shift+p` on Windows/Linux, `command+shift+p` on Mac.
 
 ### Configuration
-Set your preferences by going to `Preferences | Package Settings | Phabricator | Settings - User`. Be sure to set `arc_path` to the absolute path to `arc` in your system
+Set your preferences by going to `Preferences -> Package Settings -> Phabricator -> Settings - User`. Be sure to set `arc_path` to the absolute path to `arc` in your system.
+
+For example, your configuration on Mac OS X may be:
+```json
+{
+  "arc_path": "/usr/local/bin/arc"
+}
+```
 
 ## Documentation
 We provide a single command via the command pallete.
