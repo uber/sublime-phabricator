@@ -38,7 +38,6 @@ Open the current file inside of Phabricator. The first selected area will be hig
 
 This command can be accessed as `phabricator_open` via `run_command`.
 
-
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
 
