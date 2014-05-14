@@ -46,7 +46,7 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
             print('Ran `{0}` in `{1}`'.format(' '.join(git_args), filedir))
             print('STDERR: {0}'.format(git_stderr))
 
-        if settings.get('branch') == 'current':
+        if settings.get('branch', '') == '':
             # Format the current branch
             # `refs/heads/dev/my.branch` -> `dev/my.branch` -> `dev%2Fmy.branch` -> `dev%252Fmy.branch`
             git_branch = git_stdout.replace('refs/heads/', '').replace('\r', '').replace('\n', '')
