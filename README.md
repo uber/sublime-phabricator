@@ -29,7 +29,8 @@ Packages can be uninstalled via "Package Control: Remove Package" via the comman
 
 ### Configuration
 Set your preferences by going to `Preferences -> Package Settings -> Phabricator -> Settings - User`. Be sure to set `arc_path` to the absolute path to `arc` in your system.
-Set branch to the branch in the repo you want to view files on. Empty value uses the git branch you are currently working on.
+Set branch to the branch in the repo you want to view files on.
+Empty value uses the git branch you are currently working on.
 
 For example, your configuration on Mac OS X may be:
 ```json

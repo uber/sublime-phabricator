@@ -34,25 +34,26 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         filedir = os.path.dirname(filepath)
         filename = os.path.basename(filepath)
 
-        # Get current branch
-        git_args = ['git', 'symbolic-ref', 'HEAD']
-        git_child = subprocess.Popen(
-            git_args, cwd=filedir,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # DEV: We decode for Python 3 which receives bytes
-        git_stdout = git_child.stdout.read().decode('utf-8')
-        git_stderr = git_child.stderr.read().decode('utf-8')
-        if git_stderr:
-            print('Ran `{0}` in `{1}`'.format(' '.join(git_args), filedir))
-            print('STDERR: {0}'.format(git_stderr))
-
-        if settings.get('branch', '') == '':
-            # Format the current branch
-            # `refs/heads/dev/my.branch` -> `dev/my.branch` -> `dev%2Fmy.branch` -> `dev%252Fmy.branch`
+        git_branch = settings.get('branch')
+        if git_branch == None:
+            # Get current branch
+            git_args = ['git', 'symbolic-ref', 'HEAD']
+            git_child = subprocess.Popen(
+                git_args, cwd=filedir,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # DEV: We decode for Python 3 which receives bytes
+            git_stdout = git_child.stdout.read().decode('utf-8')
+            git_stderr = git_child.stderr.read().decode('utf-8')
+            if git_stderr:
+                print('Ran `{0}` in `{1}`'.format(' '.join(git_args), filedir))
+                print('STDERR: {0}'.format(git_stderr))
+            # Strip away `refs/head` that Phabricator dislikes
+            # `refs/heads/dev/my.branch` -> `dev/my.branch`
             git_branch = git_stdout.replace('refs/heads/', '').replace('\r', '').replace('\n', '')
-            escaped_branch = quote(quote(git_branch, safe=''), safe='')
-        else:
-            escaped_branch = quote(quote(settings.get('branch'), safe=''), safe='')
+
+        # Double escape branch name for Phabricator
+        # `dev/my.branch` -> `dev%2Fmy.branch` -> `dev%252Fmy.branch`
+        escaped_branch = quote(quote(git_branch, safe=''), safe='')
 
         # Run `arc browse` and dump the output to the console
         browse_path = '{0}${1}'.format(filename, lines)
