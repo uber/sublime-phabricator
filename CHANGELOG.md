@@ -1,4 +1,6 @@
 # sublime-phabricator changelog
+0.4.0 - Added setting for preselected `branch`. Via @vihangm in #6
+
 0.3.0 - Added context menu for "Open in Phabricator". Via @chrisjantze in #5
 
 0.2.0 - Added settings file for specifying `arc` path. Via @yangsu in #4
