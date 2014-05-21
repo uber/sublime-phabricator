@@ -34,7 +34,10 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         filedir = os.path.dirname(filepath)
         filename = os.path.basename(filepath)
 
+        # Find the preselected branch
         git_branch = settings.get('branch')
+
+        # If no preselected branch is provided
         if git_branch == None:
             # Get current branch
             git_args = ['git', 'symbolic-ref', 'HEAD']
@@ -47,6 +50,7 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
             if git_stderr:
                 print('Ran `{0}` in `{1}`'.format(' '.join(git_args), filedir))
                 print('STDERR: {0}'.format(git_stderr))
+
             # Strip away `refs/head` that Phabricator dislikes
             # `refs/heads/dev/my.branch` -> `dev/my.branch`
             git_branch = git_stdout.replace('refs/heads/', '').replace('\r', '').replace('\n', '')
