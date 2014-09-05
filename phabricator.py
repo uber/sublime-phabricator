@@ -60,7 +60,7 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         escaped_branch = quote(quote(git_branch, safe=''), safe='')
 
         # Run `arc browse` and dump the output to the console
-        browse_path = '{0}${1}'.format(filename, lines)
+        browse_path = '{0}:{1}'.format(filename, lines)
         arc_args = [settings.get('arc_path', 'arc'), 'browse', browse_path, '--branch', escaped_branch]
         arc_child = subprocess.Popen(
             arc_args, cwd=filedir,
