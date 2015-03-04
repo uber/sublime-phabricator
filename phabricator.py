@@ -1,4 +1,5 @@
 import os
+import re
 try:
     # Attempt to load Python 2 quote
     from urllib import quote
