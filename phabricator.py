@@ -39,7 +39,7 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         # Find the preselected branch
         git_branch = settings.get('branch')
 
-        if git_branch is None and settings.get('use_arc_land_onto_default', False):
+        if git_branch is None and settings.get('branch_use_arc_land_onto_default', False):
             # Get current branch
             arc_args = [settings.get('arc_path', 'arc'), 'get-config', 'arc.land.onto.default']
             arc_child = subprocess.Popen(
@@ -52,7 +52,9 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
                 print('Ran `{0}` in `{1}`'.format(' '.join(arc_args), filedir))
                 print('STDERR: {0}'.format(arc_stderr))
 
-            # Grep the output to find the return value
+            # Grep the output to find the return value.
+            # If something fails, git_branch will be unset and we will fallthrough into the next
+            # case
             m = re.search('.*Current Value: "(?P<value>.*)"\n.*', arc_stdout)
             git_branch = m.group('value')
 
