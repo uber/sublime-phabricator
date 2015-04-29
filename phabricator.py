@@ -1,4 +1,5 @@
 import os
+import re
 try:
     # Attempt to load Python 2 quote
     from urllib import quote
@@ -11,6 +12,7 @@ import subprocess
 
 SETTINGS_FILE = 'Phabricator.sublime-settings'
 
+
 class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
     def run(self):
         """Open a file inside of Phabricator with the selected lines."""
@@ -20,8 +22,8 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         view = sublime.active_window().active_view()
         first_sel = view.sel()[0]
 
-        # Find the lines that are selected
-        # Logic taken from https://github.com/ehamiter/ST2-GitHubinator/blob/c3fce41aaf2fc564115f83f1afef672f9a173d58/githubinator.py#L44-L49
+        # Find the lines that are selected. Logic taken from:
+        # https://github.com/ehamiter/ST2-GitHubinator/blob/c3fce41aaf2fc564/githubinator.py#L44-L49
         begin_line = view.rowcol(first_sel.begin())[0] + 1
         end_line = view.rowcol(first_sel.end())[0] + 1
         if begin_line == end_line:
@@ -37,8 +39,27 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
         # Find the preselected branch
         git_branch = settings.get('branch')
 
-        # If no preselected branch is provided
-        if git_branch == None:
+        if git_branch is None and settings.get('branch_use_arc_land_onto_default', False):
+            # Get current branch
+            arc_args = [settings.get('arc_path', 'arc'), 'get-config', 'arc.land.onto.default']
+            arc_child = subprocess.Popen(
+                arc_args, cwd=filedir,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # DEV: We decode for Python 3 which receives bytes
+            arc_stdout = arc_child.stdout.read().decode('utf-8')
+            arc_stderr = arc_child.stderr.read().decode('utf-8')
+            if arc_stderr:
+                print('Ran `{0}` in `{1}`'.format(' '.join(arc_args), filedir))
+                print('STDERR: {0}'.format(arc_stderr))
+
+            # Grep the output to find the return value.
+            # If something fails, git_branch will be unset and we will fallthrough into the next
+            # case
+            m = re.search('.*Current Value: "(?P<value>.*)"\n.*', arc_stdout)
+            git_branch = m.group('value')
+
+        # If no preselected branch is provided and we are not using arc.land.onto.default setting
+        if git_branch is None:
             # Get current branch
             git_args = ['git', 'symbolic-ref', 'HEAD']
             git_child = subprocess.Popen(
@@ -61,7 +82,8 @@ class PhabricatorOpenCommand(sublime_plugin.WindowCommand):
 
         # Run `arc browse` and dump the output to the console
         browse_path = '{0}:{1}'.format(filename, lines)
-        arc_args = [settings.get('arc_path', 'arc'), 'browse', browse_path, '--branch', escaped_branch]
+        arc_args = [
+            settings.get('arc_path', 'arc'), 'browse', browse_path, '--branch', escaped_branch]
         arc_child = subprocess.Popen(
             arc_args, cwd=filedir,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)

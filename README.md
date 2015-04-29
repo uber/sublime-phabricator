@@ -30,7 +30,12 @@ Packages can be uninstalled via "Package Control: Remove Package" via the comman
 ### Configuration
 Set your preferences by going to `Preferences -> Package Settings -> Phabricator -> Settings - User`. Be sure to set `arc_path` to the absolute path to `arc` in your system.
 
-Set branch to the branch in the repo you want to view files on. Empty value uses the git branch you are currently working on.
+Set `branch` to the branch in the repo you want to view files on.
+
+If you would like the plugin to just use the `arc.land.onto.default` value from the arc config for the current project,
+you can leave the branch key unset and instead set `branch_use_arc_land_onto_default` to `True`.
+
+If neither the `branch` or the `branch_use_arc_land_onto_default` keys are set, the branch you are currently on is used.
 
 For example, your configuration on Mac OS X may be:
 ```json
